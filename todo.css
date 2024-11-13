@@ -1,0 +1,333 @@
+@import url('https://fonts.googleapis.com/css2?family=Playwrite+GB+S:ital,wght@0,100..400;1,100..400&display=swap');
+/*  font-family: "Playwrite GB S", cursive; */
+
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+/* font-family: "Rubik", sans-serif; */
+
+/* ask about putting @import in head versus straight into css file */
+
+*,
+::before,
+::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --clr-1: #cf8c8c;
+  --clr-2: #A2D2DF;
+  --clr-3: #F6EFBD;
+  --clr-4: #e3deb7;
+  --clr-5: #E4C087;
+  --clr-6: #bbdae3; /* btn hover */
+  --clr-7: #c36262; /* icon hover */
+  --clr-8: #9889aa; /* bin container */
+  --clr-font: #141414;
+  --clr-font2: #181818;
+}
+
+.dark-mode {
+  --clr-1: #5b2b92; /*  */
+  --clr-2: #b46fae; /*  */
+  --clr-3: #a7aea9; 
+  --clr-4: #9ba39d;
+  --clr-5: #1f1211; /*  */
+  --clr-6: #cc7ac5; /* btn hover */
+  --clr-7: #3a2a4d; /* icon hover */
+  --clr-8: #b4a4c9; /* bin container */
+  --clr-font: #EBEBEB;
+}
+
+body {
+  background-color: var(--clr-5);
+  color: var(--clr-font);
+  height: 100vh;
+  display: grid;
+  /* place-content: center; */
+  justify-content: center;
+}
+
+.todo-container {
+ /*  border: 1px solid red; */
+  border: 1px solid rgb(86, 86, 86, 0.8);
+  box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.3);
+  height: fit-content;
+  width: 550px;
+ /*  max-height: 600px;
+  height: fit-content;
+  overflow-y: scroll; */
+}
+
+.header {
+  position: relative;
+  padding: 1.5rem 3rem;
+  background-color: var(--clr-1);
+  text-align: center;
+  font-family: "Rubik", sans-serif;
+  border-bottom: 1px solid rgb(86, 86, 86, 0.8);
+}
+h2 {
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+}
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+input {
+  font-size: 1.1rem;
+  padding: 5px 8px;
+ /*  width: 300px; */
+  width: 100%;
+  border-bottom-left-radius: 10px;
+  border-top-left-radius: 10px;
+  border: 1px solid black;
+  font-family: "Rubik", sans-serif;
+}
+
+input:focus {
+  outline: 2px solid var(--clr-2);
+}
+
+.add-button,
+.cancel-button {
+  background-color: var(--clr-2);
+  border: none;
+  padding: 6.2px 1.5rem;
+  font-family: "Rubik", sans-serif;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 250ms ease-in;
+  /* margin-left: -1px; */
+}
+.add-button {
+  border-bottom-right-radius: 10px;
+  border-top-right-radius: 10px;
+}
+.cancel-button {
+  display: none;
+  border-radius: 10px;
+  margin-left: 3px;
+}
+.add-button:hover,
+.cancel-button:hover,
+.bin-clear-all-btn:hover {
+  background-color: var(--clr-6);
+}
+
+/**************
+   TRASH BIN
+***************/
+.trash-bin-btn {
+  position: absolute;
+  top: 1.2rem;
+  left: 1rem;
+  font-size: 1.5rem;
+  color: var(--clr-6);
+  text-shadow: 0 0 1px var(--clr-font2);
+  cursor: pointer;
+  /* border: 1px solid red; */
+}
+
+.bin-container {
+  display: none;
+  background-color: var(--clr-8); /*  */
+  position: fixed;
+  z-index: 100;
+  width: 430px;
+  top: 1rem;
+  left: 1rem;
+  padding: 1.5rem;
+  font-family: "Rubik", sans-serif;
+  max-height: 300px;
+  overflow-y: scroll;
+  /* add SHADOW */
+}
+
+.bin-container::-webkit-scrollbar {
+  width: 8px;
+}
+.bin-container::-webkit-scrollbar-track {
+  background: var(--clr-4);
+}
+.bin-container::-webkit-scrollbar-thumb {
+  background: var(--clr-2);
+  border-radius: 3px;
+}
+
+.bin-clear-all-btn {
+  display: block;
+  margin-inline: auto;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  background-color: var(--clr-2);
+  border: none;
+  padding: 6.2px 1.5rem;
+  font-family: "Rubik", sans-serif;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 250ms ease-in;
+}
+.bin-list li {
+  /* font-size: 0.9rem; */
+  border: 1px solid white;
+  list-style: none;
+  padding: 4px .5rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  transition: all 200ms ease-in;
+  color: var(--clr-font2);
+}
+.bin-list li:hover {
+  background-color: var(--clr-2);
+} 
+.close-bin-btn {
+  position: absolute;
+  right: 0.5rem;
+  top: 0.5rem;
+  transition: all 250ms ease-in;
+  cursor: pointer;
+}
+.bin-list span i {
+  font-size: 1.1rem;
+  /* color: var(--clr-1); */
+  transition: all 250ms ease-in;
+}
+.close-bin-btn:hover {
+  color: var(--clr-2);
+}
+.bin-list span:hover i {
+  color: var(--clr-7);
+}
+
+/*******************
+  DARK MODE BUTTON 
+********************/
+
+.switch-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 3.5rem;
+  height: 1.7rem;
+  display: flex;
+  border-radius: 1rem;
+  align-items: center;
+  justify-content: space-around;
+  border: none;
+  background: var(--clr-3);
+  transition: all 300ms ease-in-out;
+}
+
+.switch-btn span {
+  display: inline-block;
+  font-size: 1.15rem;
+  cursor: pointer;
+  color: var(--clr-5);
+  /* text-shadow: 0px 0px 1px var(--clr-font); */
+}
+
+.switch {
+  position: absolute;
+  width: 50%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: var(--clr-5);
+  border-radius: 1rem;
+  margin: 0;
+  display: block;
+  transition: all 300ms ease-out;
+  z-index: 10;
+}
+
+.slide .switch {
+  left: 50%;
+}
+
+/*******************
+     TO-DO LIST
+********************/
+.list-container {
+  background-color: var(--clr-3);
+  font-family: "Playwrite GB S", cursive;
+  /* border: 2px solid red; */
+  max-height: 390px;
+  max-width: 100%;
+  overflow-y: scroll;
+}
+
+.list-container::-webkit-scrollbar {
+  width: 8px;
+}
+.list-container::-webkit-scrollbar-track {
+  background: var(--clr-3);
+}
+.list-container::-webkit-scrollbar-thumb {
+  background: var(--clr-1);
+  border-radius: 3px;
+}
+
+.todo-list li {
+  list-style: none;
+  padding: 6px 1rem 6px 2.5rem;
+  cursor: pointer;
+  position: relative;  
+  display: flex;
+  justify-content: space-between;
+  transition: all 200ms ease-in;
+  color: var(--clr-font2);
+  /* -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; */
+}
+
+/* li span {
+  border: 1px solid green;
+} */
+.todo-btn-container {
+  display: flex;
+  margin-left: 10px;
+}
+.edit-button {
+  margin-right: 4px;
+}
+
+.todo-list li span i {
+  font-size: 1.2rem;
+  color: var(--clr-1);
+  transition: all 250ms ease-in;
+}
+.todo-list li span:hover i {
+  color: var(--clr-7);
+}
+
+.todo-list li:nth-last-child(odd) {
+  background-color: var(--clr-4);
+}
+
+.todo-list li:hover {
+  background-color: var(--clr-2);
+}
+
+.todo-list li.checked {
+  background-color: var(--clr-2);
+  text-decoration: line-through;
+}
+/* 'checked' mark */
+li.checked::before {
+  content: '';
+  position: absolute;
+  border-color: var(--clr-font);
+  border-style: solid;
+  border-width: 0 2px 2px 0;
+  top: 10px;
+  left: 16px;
+  transform: rotate(45deg);
+  height: 15px;
+  width: 7px;
+}

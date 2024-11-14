@@ -15,13 +15,14 @@ const todoList = JSON.parse(localStorage.getItem('data')) || [
 
 let trashBinList = JSON.parse(localStorage.getItem('trash')) || [];
 
+let darkModeOn = JSON.parse(localStorage.getItem('mode')) || false;
+
 renderTodoList();
 
 /************************
     DISPLAY TO-DO LIST
 *************************/
 function renderTodoList() {
-
   let todoHTML = '';
 
   todoList.forEach((object) => {
@@ -29,8 +30,8 @@ function renderTodoList() {
     const HTML = `
       <li class="todo-name ${isChecked ? 'checked' : ''}" data-id="${id}">${name}
         <div class="todo-btn-container">
-          <span class="edit-button"><i class="fa-regular fa-pen-to-square"></i></span>
-          <span class="delete-button"><i class="fa-regular fa-circle-xmark"></i></span>
+          <span class="edit-button" title="Edit"><i class="fa-regular fa-pen-to-square"></i></span>
+          <span class="delete-button" title="Delete"><i class="fa-regular fa-circle-xmark"></i></span>
         </div>
       </li>
     `; 
@@ -50,11 +51,8 @@ function renderTodoList() {
   document.querySelectorAll('.delete-button')
     .forEach((button, index) => {
       button.addEventListener('click', () => {
-        /* console.log('test click'); */
         trashBinList.push(todoList[index]);
         todoList.splice(index, 1);
-/*         console.log(trashBinList);
-        console.log(index); */
         renderTrashBinList();
         renderTodoList();
       });
@@ -70,6 +68,9 @@ let editIndex = null;
 
 addBtn.addEventListener('click', addOrEdit);
 
+/********************
+    RESET BUTTONS
+*********************/
 function resetBtns() {
   input.value = '';
   addBtn.textContent = 'Add';
@@ -83,6 +84,9 @@ cancelBtn.addEventListener('click', () => {
   renderTodoList();
 });
 
+/**********************
+   UPDATE TO-DO ITEM
+***********************/
 function updateTodo(index) {
   let input = document.getElementById("input");
   input.value = todoList[index].name;  
@@ -92,6 +96,9 @@ function updateTodo(index) {
   editIndex = index;
 };
 
+/******************
+   ADD/EDIT MODE
+*******************/
 function addOrEdit() {
   let input = document.getElementById("input");
   const todoName = input.value;
@@ -102,17 +109,16 @@ function addOrEdit() {
       alert('Enter your text first, bruh');
       return;
     }
-
     todoList[editIndex].name = todoName;
     resetBtns();
     renderTodoList();
+
   } else {
   
     if (todoName === '') {
       alert('Enter your text first, bruh');
       return;
     }
-  
     todoList.push({
       id: Date.now(),
       name: todoName, 
@@ -138,20 +144,8 @@ list.addEventListener('click', (e) => {
  
   const todoId = e.target.dataset.id;
   // const todoId = e.target.getAttribute('data-id');
-  console.log(todoId);
-  console.log(typeof todoId);
   const match = todoList.find(todo => todo.id === Number(todoId));
-  console.log('match');
-  console.log(match);
-  /* for (let i = 0; i < todoList.length; i++) {
-    if (todoList[i].name === e.target.innerText) {
-      match = todoList[i];
-      break;
-    } 
-  } */
-  /* if(match !== undefined) {
-    match.isChecked = e.target.classList.contains('checked');
-  } */
+  
   if(match !== undefined) {
     if (e.target.classList.contains('checked')) {
       match.isChecked = true;
@@ -163,37 +157,32 @@ list.addEventListener('click', (e) => {
   renderTodoList();
 });
 
-
-/**********************************
-  TRIGGER A BUTTON CLICK ON ENTER
-***********************************/
-document.getElementById("input")
-  .addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      addOrEdit();
-    }
-  });
-
-
 /*******************
   DARK MODE BUTTON 
 ********************/
 const switchBtn = document.querySelector('.switch-btn');
 
+if (darkModeOn) {
+  document.documentElement.classList.add('dark-mode');
+  switchBtn.classList.add('slide');
+}
+
 switchBtn.addEventListener('click', () => {
-  const darkModeOn = switchBtn.classList.toggle('slide');
+  darkModeOn = !darkModeOn;
   document.documentElement.classList.toggle('dark-mode', darkModeOn);
+  switchBtn.classList.toggle('slide', darkModeOn);
+
+  localStorage.setItem('mode', JSON.stringify(darkModeOn));
+
 });
+
 // toggle('class', condition)
 // document.body returns the <body> element
 // document.documentElement returns the <html> element
 
-
-
 /****************
     TRASH BIN  
 ****************/
-
 const bin = document.querySelector('.trash-bin-btn');
 const binContainer = document.querySelector('.bin-container');
 const closeBinBtn = document.querySelector('.close-bin-btn');
@@ -206,21 +195,16 @@ closeBinBtn.addEventListener('click', () => {
   binContainer.style.display = "none"; 
 });
 
-/* const restoreButtons = document.querySelectorAll('.restore-button'); *//* const deleteTrashButtons = document.querySelectorAll('.delete-trash-button');
- */
-
 function renderTrashBinList() {
-  /* console.log('hello there'); */
   let trashBinHTML = '';
-/* console.log(trashBinList.length); */
 
   trashBinList.forEach((object) => {
     const { name } = object;
     const HTML = `
       <li class="bin-list-name">${name}
         <div class="bin-btn-container">
-          <span class="restore-button"><i class="fa-solid fa-trash-arrow-up"></i></span>
-          <span class="delete-trash-button"><i class="fa-regular fa-circle-xmark"></i></span>
+          <span class="restore-button" title="Restore"><i class="fa-solid fa-trash-arrow-up"></i></span>
+          <span class="delete-trash-button" title="Delete"><i class="fa-regular fa-circle-xmark"></i></span>
         </div>
       </li>
     `; 
@@ -250,7 +234,6 @@ function renderTrashBinList() {
     });
   });
 
-
   if (trashBinList.length === 0) {
     clearAllBtn.style.display = "none";
     document.querySelector('.bin-list')
@@ -258,7 +241,6 @@ function renderTrashBinList() {
   } else {
     clearAllBtn.style.display = "block";
   };
-
 
   localStorage.setItem('trash', JSON.stringify(trashBinList));
 };
@@ -287,3 +269,13 @@ clearAllBtn.addEventListener('click', () => {
   .addEventListener('click', renderTrashBinList); */
 
 /* console.log(Date.now()); */
+
+/**********************************
+  TRIGGER A BUTTON CLICK ON ENTER
+***********************************/
+document.getElementById("input")
+  .addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      addOrEdit();
+    }
+  });

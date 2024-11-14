@@ -4,8 +4,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 /* font-family: "Rubik", sans-serif; */
 
-/* ask about putting @import in head versus straight into css file */
-
 *,
 ::before,
 ::after {
@@ -28,11 +26,11 @@
 }
 
 .dark-mode {
-  --clr-1: #5b2b92; /*  */
-  --clr-2: #b46fae; /*  */
+  --clr-1: #5b2b92; 
+  --clr-2: #b46fae; 
   --clr-3: #a7aea9; 
   --clr-4: #9ba39d;
-  --clr-5: #1f1211; /*  */
+  --clr-5: #301817; 
   --clr-6: #cc7ac5; /* btn hover */
   --clr-7: #3a2a4d; /* icon hover */
   --clr-8: #b4a4c9; /* bin container */
@@ -49,14 +47,11 @@ body {
 }
 
 .todo-container {
- /*  border: 1px solid red; */
+  margin-top: 1rem;
   border: 1px solid rgb(86, 86, 86, 0.8);
   box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.3);
   height: fit-content;
   width: 550px;
- /*  max-height: 600px;
-  height: fit-content;
-  overflow-y: scroll; */
 }
 
 .header {
@@ -67,19 +62,22 @@ body {
   font-family: "Rubik", sans-serif;
   border-bottom: 1px solid rgb(86, 86, 86, 0.8);
 }
+
 h2 {
   margin-bottom: 1rem;
   font-size: 1.8rem;
+  text-shadow: 2px 0 0 var(--clr-2);
 }
+
 .input-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
 input {
   font-size: 1.1rem;
   padding: 5px 8px;
- /*  width: 300px; */
   width: 100%;
   border-bottom-left-radius: 10px;
   border-top-left-radius: 10px;
@@ -100,17 +98,19 @@ input:focus {
   font-size: 1rem;
   cursor: pointer;
   transition: all 250ms ease-in;
-  /* margin-left: -1px; */
 }
+
 .add-button {
   border-bottom-right-radius: 10px;
   border-top-right-radius: 10px;
 }
+
 .cancel-button {
   display: none;
   border-radius: 10px;
   margin-left: 3px;
 }
+
 .add-button:hover,
 .cancel-button:hover,
 .bin-clear-all-btn:hover {
@@ -128,12 +128,11 @@ input:focus {
   color: var(--clr-6);
   text-shadow: 0 0 1px var(--clr-font2);
   cursor: pointer;
-  /* border: 1px solid red; */
 }
 
 .bin-container {
   display: none;
-  background-color: var(--clr-8); /*  */
+  background-color: var(--clr-8);
   position: fixed;
   z-index: 100;
   width: 430px;
@@ -171,15 +170,14 @@ input:focus {
   cursor: pointer;
   transition: all 250ms ease-in;
 }
+
 .empty-message {
   text-align: center;
-  /* margin-top: 2.5rem; */
   padding: 2.5rem 0;
   font-size: 1.1rem;
 }
+
 .bin-list li {
-  /* font-size: 0.9rem; */
-  /* border: 1px solid white; */
   list-style: none;
   padding: 4px .5rem;
   cursor: pointer;
@@ -188,9 +186,11 @@ input:focus {
   transition: all 200ms ease-in;
   color: var(--clr-font2);
 }
+
 .bin-list li:hover {
   background-color: var(--clr-2);
 } 
+
 .close-bin-btn {
   font-size: 1.2rem;
   position: absolute;
@@ -199,17 +199,21 @@ input:focus {
   transition: all 250ms ease-in;
   cursor: pointer;
 }
+
 .restore-button {
   margin-right: 2px;
 }
+
 .bin-list span i {
   font-size: 1.1rem;
   /* color: var(--clr-1); */
   transition: all 250ms ease-in;
 }
+
 .close-bin-btn:hover {
   color: var(--clr-2);
 }
+
 .bin-list span:hover i {
   color: var(--clr-7);
 }
@@ -217,7 +221,6 @@ input:focus {
 /*******************
   DARK MODE BUTTON 
 ********************/
-
 .switch-btn {
   position: absolute;
   top: 1rem;
@@ -238,8 +241,7 @@ input:focus {
   font-size: 1.15rem;
   cursor: pointer;
   color: var(--clr-5);
-  /* text-shadow: 0px 0px 1px var(--clr-font); */
-}
+ }
 
 .switch {
   position: absolute;
@@ -291,19 +293,13 @@ input:focus {
   justify-content: space-between;
   transition: all 200ms ease-in;
   color: var(--clr-font2);
-  /* -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none; */
 }
 
-/* li span {
-  border: 1px solid green;
-} */
 .todo-btn-container {
   display: flex;
   margin-left: 10px;
 }
+
 .edit-button {
   margin-right: 4px;
 }
@@ -329,7 +325,8 @@ input:focus {
   background-color: var(--clr-2);
   text-decoration: line-through;
 }
-/* 'checked' mark */
+
+/**** checkmark ****/
 li.checked::before {
   content: '';
   position: absolute;

@@ -1,11 +1,13 @@
 const todoList = JSON.parse(localStorage.getItem('data')) || [
-  { 
+  { id: 1731559522940,
     name: 'make dinner',
     isChecked: true
   }, {
+    id: 1731559522930,
     name: 'water plants',
     isChecked: false
   }, {
+    id: 1731559522920,
     name: 'meditate',
     isChecked: false
   },
@@ -14,16 +16,18 @@ const todoList = JSON.parse(localStorage.getItem('data')) || [
 let trashBinList = JSON.parse(localStorage.getItem('trash')) || [];
 
 renderTodoList();
-/* renderTrashBinList();  */
 
+/************************
+    DISPLAY TO-DO LIST
+*************************/
 function renderTodoList() {
 
   let todoHTML = '';
 
   todoList.forEach((object) => {
-    const { name, isChecked } = object;
+    const { id, name, isChecked } = object;
     const HTML = `
-      <li class="todo-name ${isChecked ? 'checked' : ''}">${name}
+      <li class="todo-name ${isChecked ? 'checked' : ''}" data-id="${id}">${name}
         <div class="todo-btn-container">
           <span class="edit-button"><i class="fa-regular fa-pen-to-square"></i></span>
           <span class="delete-button"><i class="fa-regular fa-circle-xmark"></i></span>
@@ -109,7 +113,12 @@ function addOrEdit() {
       return;
     }
   
-    todoList.push({ name: todoName, isChecked: false });
+    todoList.push({
+      id: Date.now(),
+      name: todoName, 
+      isChecked: false 
+    });
+
     input.value = '';
   };
   renderTodoList(); 
@@ -117,8 +126,9 @@ function addOrEdit() {
 
 renderTodoList(); 
 
-// add 'checked' when clicking on a list todo item
-
+/**************************************************
+  Add 'checked' when clicking on a list todo item
+***************************************************/
 const list = document.querySelector('.todo-list');
 
 list.addEventListener('click', (e) => {
@@ -126,14 +136,22 @@ list.addEventListener('click', (e) => {
     e.target.classList.toggle('checked');
   };
  
-  let match;
-  for (let i = 0; i < todoList.length; i++) {
+  const todoId = e.target.dataset.id;
+  // const todoId = e.target.getAttribute('data-id');
+  console.log(todoId);
+  console.log(typeof todoId);
+  const match = todoList.find(todo => todo.id === Number(todoId));
+  console.log('match');
+  console.log(match);
+  /* for (let i = 0; i < todoList.length; i++) {
     if (todoList[i].name === e.target.innerText) {
       match = todoList[i];
       break;
-    }
-  }
-
+    } 
+  } */
+  /* if(match !== undefined) {
+    match.isChecked = e.target.classList.contains('checked');
+  } */
   if(match !== undefined) {
     if (e.target.classList.contains('checked')) {
       match.isChecked = true;
@@ -145,8 +163,10 @@ list.addEventListener('click', (e) => {
   renderTodoList();
 });
 
-// TRIGGER A BUTTON CLICK ON ENTER
 
+/**********************************
+  TRIGGER A BUTTON CLICK ON ENTER
+***********************************/
 document.getElementById("input")
   .addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
@@ -177,6 +197,7 @@ switchBtn.addEventListener('click', () => {
 const bin = document.querySelector('.trash-bin-btn');
 const binContainer = document.querySelector('.bin-container');
 const closeBinBtn = document.querySelector('.close-bin-btn');
+const clearAllBtn = document.querySelector('.bin-clear-all-btn');
 
 bin.addEventListener('click', () => {
   binContainer.style.display = "block"; 
@@ -191,11 +212,7 @@ closeBinBtn.addEventListener('click', () => {
 function renderTrashBinList() {
   /* console.log('hello there'); */
   let trashBinHTML = '';
-
-  /* if (trashBinList.length === 0) {
-    document.querySelector('.bin-list')
-    .innerHTML = ``
-  }; */  /* CONTINUEEE */
+/* console.log(trashBinList.length); */
 
   trashBinList.forEach((object) => {
     const { name } = object;
@@ -233,17 +250,31 @@ function renderTrashBinList() {
     });
   });
 
+
+  if (trashBinList.length === 0) {
+    clearAllBtn.style.display = "none";
+    document.querySelector('.bin-list')
+    .innerHTML = `<div class="empty-message">It's empty</div>`;
+  } else {
+    clearAllBtn.style.display = "block";
+  };
+
+
   localStorage.setItem('trash', JSON.stringify(trashBinList));
 };
 
 renderTrashBinList(); /* trashBinList */
 
-const clearAllBtn = document.querySelector('.bin-clear-all-btn');
+
 clearAllBtn.addEventListener('click', () => {
   let text = 'Are you sure, gurl?';
   /* confirm(text); */
+  if (trashBinList.length === 0) {
+    alert("It's already empty");
+    return;
+  };
+
   if(confirm(text) === true) {
-    console.log('sup bro');
     trashBinList = [];
     renderTrashBinList();
   } else {
@@ -252,6 +283,7 @@ clearAllBtn.addEventListener('click', () => {
   /* trashBinList = []; */
 });
 
-document.querySelector('.test-btn')
-  .addEventListener('click', renderTrashBinList);
+/* document.querySelector('.test-btn')
+  .addEventListener('click', renderTrashBinList); */
 
+/* console.log(Date.now()); */

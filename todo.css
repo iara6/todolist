@@ -141,9 +141,10 @@ input:focus {
   left: 1rem;
   padding: 1.5rem;
   font-family: "Rubik", sans-serif;
-  max-height: 300px;
+  max-height: 500px;
+  min-height: 150px;
   overflow-y: scroll;
-  /* add SHADOW */
+  box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.3);
 }
 
 .bin-container::-webkit-scrollbar {
@@ -170,9 +171,15 @@ input:focus {
   cursor: pointer;
   transition: all 250ms ease-in;
 }
+.empty-message {
+  text-align: center;
+  /* margin-top: 2.5rem; */
+  padding: 2.5rem 0;
+  font-size: 1.1rem;
+}
 .bin-list li {
   /* font-size: 0.9rem; */
-  border: 1px solid white;
+  /* border: 1px solid white; */
   list-style: none;
   padding: 4px .5rem;
   cursor: pointer;
@@ -185,11 +192,15 @@ input:focus {
   background-color: var(--clr-2);
 } 
 .close-bin-btn {
+  font-size: 1.2rem;
   position: absolute;
   right: 0.5rem;
   top: 0.5rem;
   transition: all 250ms ease-in;
   cursor: pointer;
+}
+.restore-button {
+  margin-right: 2px;
 }
 .bin-list span i {
   font-size: 1.1rem;

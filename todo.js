@@ -14,6 +14,7 @@ const todoList = JSON.parse(localStorage.getItem('data')) || [
 ];
 
 let trashBinList = JSON.parse(localStorage.getItem('trash')) || [];
+console.log(trashBinList);
 
 let darkModeOn = JSON.parse(localStorage.getItem('mode')) || false;
 
@@ -51,6 +52,12 @@ function renderTodoList() {
   document.querySelectorAll('.delete-button')
     .forEach((button, index) => {
       button.addEventListener('click', () => {
+        
+        if (trashBinList.length === 60) {
+          alert('Your trash bin is full, gurl');
+          return;
+        };
+
         trashBinList.push(todoList[index]);
         todoList.splice(index, 1);
         renderTrashBinList();
@@ -241,6 +248,11 @@ function renderTrashBinList() {
   } else {
     clearAllBtn.style.display = "block";
   };
+
+ /*  if (trashBinList.length > 60) {
+    alert('Your trash bin is full, gurl');
+    return;
+  }; */
 
   localStorage.setItem('trash', JSON.stringify(trashBinList));
 };

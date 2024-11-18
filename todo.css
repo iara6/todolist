@@ -175,6 +175,7 @@ input:focus {
   text-align: center;
   padding: 2.5rem 0;
   font-size: 1.1rem;
+  color: var(--clr-font2);
 }
 
 .bin-list li {
@@ -198,6 +199,10 @@ input:focus {
   top: 0.5rem;
   transition: all 250ms ease-in;
   cursor: pointer;
+}
+
+.bin-btn-container {
+  white-space: nowrap;
 }
 
 .restore-button {
@@ -338,4 +343,66 @@ li.checked::before {
   transform: rotate(45deg);
   height: 15px;
   width: 7px;
+}
+
+@media (max-width: 650px) {
+  .todo-container {
+    height: fit-content;
+    width: 450px;
+  }
+  h2 {
+    font-size: 1.6rem;
+    text-shadow: 2px 0 0 var(--clr-2);
+  }
+  input {
+    font-size: 1rem;
+    padding: 4px 7px;
+  }
+  .add-button,
+  .cancel-button,
+  .bin-clear-all-btn {
+    padding: 5.3px 1.4rem;
+    font-size: 0.9rem;
+  }
+  .trash-bin-btn {
+    top: 1rem;
+    left: 1rem;
+    font-size: 1.3rem;
+  }
+  .bin-container {
+    width: 380px;
+    top: 1rem;
+    left: 1rem;
+    padding: 1.2rem;
+    max-height: 400px;
+  }
+  .empty-message {
+    font-size: 1rem;
+  }
+  .bin-list li {
+    padding: 4px .5rem;
+  }
+  .bin-list span i {
+    font-size: 1rem;
+  }
+  .switch-btn {
+    width: 3rem;
+    height: 1.5rem;
+  }
+  .switch-btn span {
+    font-size: 1rem;
+  }
+  .list-container {
+    max-height: 350px;
+  }
+  .todo-list li {
+    padding: 5px 1rem 5px 2.1rem;
+  } 
+  .todo-list li span i {
+    font-size: 1.1rem;
+  }
+  li.checked::before {
+    height: 13px;
+    width: 6px;
+  }
 }

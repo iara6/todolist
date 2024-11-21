@@ -14,7 +14,6 @@ const todoList = JSON.parse(localStorage.getItem('data')) || [
 ];
 
 let trashBinList = JSON.parse(localStorage.getItem('trash')) || [];
-console.log(trashBinList);
 
 let darkModeOn = JSON.parse(localStorage.getItem('mode')) || false;
 
@@ -135,6 +134,7 @@ function addOrEdit() {
     input.value = '';
   };
   renderTodoList(); 
+  moveProgressBar(); 
 };
 
 renderTodoList(); 
@@ -162,6 +162,7 @@ list.addEventListener('click', (e) => {
   }; 
 
   renderTodoList();
+  moveProgressBar();
 });
 
 /*******************
@@ -230,6 +231,7 @@ function renderTrashBinList() {
         trashBinList.splice(index, 1);
         renderTrashBinList();
         renderTodoList();
+        moveProgressBar();
       });
     });
 
@@ -262,7 +264,6 @@ renderTrashBinList(); /* trashBinList */
 
 clearAllBtn.addEventListener('click', () => {
   let text = 'Are you sure, gurl?';
-  /* confirm(text); */
   if (trashBinList.length === 0) {
     alert("It's already empty");
     return;
@@ -274,7 +275,6 @@ clearAllBtn.addEventListener('click', () => {
   } else {
     return;
   };
-  /* trashBinList = []; */
 });
 
 /* document.querySelector('.test-btn')
@@ -282,6 +282,32 @@ clearAllBtn.addEventListener('click', () => {
 
 /* console.log(Date.now()); */
 
+/*****************
+   PROGRESS BAR
+******************/
+function moveProgressBar() {
+  const progressBar = document.querySelector('.progress-bar');
+  const progressBarStep = Number((100 / todoList.length).toFixed(2));
+  console.log(progressBarStep); // 10
+ /*  progressBar.style.width = "50%"; */
+/*  progressBar.style.width = `${progressBarStep}%`;  */
+
+  let progressBarWidth = null;
+  console.log(progressBarWidth); // undef
+
+  todoList.forEach((obj) => {
+    const { isChecked } = obj;
+    if (isChecked === true) {
+      progressBarWidth += progressBarStep;
+    };  
+    console.log(progressBarWidth); //NaN
+  });
+ /* console.log(progressBar.style.width); */
+ console.log(progressBarWidth);
+ progressBar.style.width = progressBarWidth < 100 ? `${Math.ceil(progressBarWidth)}%` : `${Math.floor(progressBarWidth)}%`;
+ console.log(progressBar.style.width);
+};
+moveProgressBar();
 /**********************************
   TRIGGER A BUTTON CLICK ON ENTER
 ***********************************/

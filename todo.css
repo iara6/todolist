@@ -20,21 +20,25 @@
   --clr-5: #E4C087;
   --clr-6: #bbdae3; /* btn hover */
   --clr-7: #c36262; /* icon hover */
-  --clr-8: #9889aa; /* bin container */
+  --clr-8: #ac99c3; /* bin container */
+  --clr-9: #c4da39; /* progress bar */
+  --clr-10: #808080; /* outline */
   --clr-font: #141414;
   --clr-font2: #181818;
 }
 
 .dark-mode {
-  --clr-1: #5b2b92; 
-  --clr-2: #b46fae; 
-  --clr-3: #a7aea9; 
-  --clr-4: #9ba39d;
-  --clr-5: #301817; 
-  --clr-6: #cc7ac5; /* btn hover */
+  --clr-1: #6A4290; 
+  --clr-2: #c783be; 
+  --clr-3: #d7c6c5; /*  */
+  --clr-4: #cdb5b4; /*  */
+  --clr-5: #332332; 
+  --clr-6: #d78acd; /* btn hover */
   --clr-7: #3a2a4d; /* icon hover */
-  --clr-8: #b4a4c9; /* bin container */
-  --clr-font: #EBEBEB;
+  --clr-8: #bca9c8; /* bin container */
+  --clr-9: #73ae35; /* progress bar */
+  --clr-10: #4d4d4d; /* outline */
+  --clr-font: #f2e5e5;
 }
 
 body {
@@ -67,6 +71,22 @@ h2 {
   margin-bottom: 1rem;
   font-size: 1.8rem;
   text-shadow: 2px 0 0 var(--clr-2);
+}
+
+.progress-bar-container {
+  background-color: var(--clr-3);
+  height: 0.6rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  outline: 1px solid var(--clr-10);
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: var(--clr-9);
+  width: 0%;
+  transition: width 350ms ease-out;
 }
 
 .input-wrapper {
@@ -125,9 +145,14 @@ input:focus {
   top: 1.2rem;
   left: 1rem;
   font-size: 1.5rem;
-  color: var(--clr-6);
+  color: var(--clr-2);
   text-shadow: 0 0 1px var(--clr-font2);
+  transition: all 250ms ease-in;
   cursor: pointer;
+}
+
+.trash-bin-btn:hover {
+  color: var(--clr-6);
 }
 
 .bin-container {

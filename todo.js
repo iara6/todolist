@@ -53,7 +53,7 @@ function renderTodoList() {
       button.addEventListener('click', () => {
         
         if (trashBinList.length === 60) {
-          alert('Your trash bin is full, gurl');
+          alert('Your trash bin is full');
           return;
         };
 
@@ -61,6 +61,7 @@ function renderTodoList() {
         todoList.splice(index, 1);
         renderTrashBinList();
         renderTodoList();
+        renderMemoryUsageBar();
       });
     });
 
@@ -232,6 +233,7 @@ function renderTrashBinList() {
         renderTrashBinList();
         renderTodoList();
         moveProgressBar();
+        renderMemoryUsageBar();
       });
     });
 
@@ -240,47 +242,51 @@ function renderTrashBinList() {
       button.addEventListener('click', () => {
         trashBinList.splice(index, 1);
         renderTrashBinList();
+        renderMemoryUsageBar();
     });
   });
 
+  const memoryBarContainer = document.querySelector('.memory-usage-bar-container');
+
   if (trashBinList.length === 0) {
     clearAllBtn.style.display = "none";
+    memoryBarContainer.style.display = "none";
     document.querySelector('.bin-list')
     .innerHTML = `<div class="empty-message">It's empty</div>`;
   } else {
     clearAllBtn.style.display = "block";
+    memoryBarContainer.style.display = "block";
   };
-
- /*  if (trashBinList.length > 60) {
-    alert('Your trash bin is full, gurl');
-    return;
-  }; */
 
   localStorage.setItem('trash', JSON.stringify(trashBinList));
 };
 
-renderTrashBinList(); /* trashBinList */
-
+renderTrashBinList(); 
 
 clearAllBtn.addEventListener('click', () => {
-  let text = 'Are you sure, gurl?';
-  if (trashBinList.length === 0) {
-    alert("It's already empty");
-    return;
-  };
+  let text = 'Are you sure?';
 
   if(confirm(text) === true) {
     trashBinList = [];
     renderTrashBinList();
+    renderMemoryUsageBar();
   } else {
     return;
   };
 });
 
-/* document.querySelector('.test-btn')
-  .addEventListener('click', renderTrashBinList); */
+/**************************
+   TRASH MEMORY USAGE BAR
+***************************/
+function renderMemoryUsageBar() {
+  const memoryBar = document.querySelector('.memory-usage-bar');
+  const memoryBarStep = Number((100 / 60).toFixed(2));
+  let memoryBarWidth = null;
 
-/* console.log(Date.now()); */
+  memoryBarWidth = memoryBarStep * trashBinList.length;
+  memoryBar.style.width = memoryBarWidth < 100 ? `${Math.ceil(memoryBarWidth)}%` : `${Math.floor(memoryBarWidth)}%`;
+}
+renderMemoryUsageBar();
 
 /*****************
    PROGRESS BAR
@@ -288,26 +294,19 @@ clearAllBtn.addEventListener('click', () => {
 function moveProgressBar() {
   const progressBar = document.querySelector('.progress-bar');
   const progressBarStep = Number((100 / todoList.length).toFixed(2));
-  console.log(progressBarStep); // 10
- /*  progressBar.style.width = "50%"; */
-/*  progressBar.style.width = `${progressBarStep}%`;  */
-
   let progressBarWidth = null;
-  console.log(progressBarWidth); // undef
 
   todoList.forEach((obj) => {
     const { isChecked } = obj;
     if (isChecked === true) {
       progressBarWidth += progressBarStep;
     };  
-    console.log(progressBarWidth); //NaN
   });
- /* console.log(progressBar.style.width); */
- console.log(progressBarWidth);
+
  progressBar.style.width = progressBarWidth < 100 ? `${Math.ceil(progressBarWidth)}%` : `${Math.floor(progressBarWidth)}%`;
- console.log(progressBar.style.width);
 };
 moveProgressBar();
+
 /**********************************
   TRIGGER A BUTTON CLICK ON ENTER
 ***********************************/

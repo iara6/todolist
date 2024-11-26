@@ -23,6 +23,7 @@
   --clr-8: #ac99c3; /* bin container */
   --clr-9: #c4da39; /* progress bar */
   --clr-10: #808080; /* outline */
+  --clr-11: #73e07c; /* memo-usage-bar */
   --clr-font: #141414;
   --clr-font2: #181818;
 }
@@ -35,9 +36,11 @@
   --clr-5: #332332; 
   --clr-6: #d78acd; /* btn hover */
   --clr-7: #3a2a4d; /* icon hover */
-  --clr-8: #bca9c8; /* bin container */
+  /* --clr-8: #bca9c8; */ /* bin container */
+  --clr-8: #96c1b2; /* bin container */
   --clr-9: #73ae35; /* progress bar */
   --clr-10: #4d4d4d; /* outline */
+  --clr-11: #9b7ae7; /* memo-usage-bar */
   --clr-font: #f2e5e5;
 }
 
@@ -56,6 +59,7 @@ body {
   box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.3);
   height: fit-content;
   width: 550px;
+  border-radius: 3px;
 }
 
 .header {
@@ -169,6 +173,7 @@ input:focus {
   min-height: 150px;
   overflow-y: scroll;
   box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.3);
+  border-radius: 3px;
 }
 
 .bin-container::-webkit-scrollbar {
@@ -196,6 +201,23 @@ input:focus {
   transition: all 250ms ease-in;
 }
 
+.memory-usage-bar-container {
+  background-color: var(--clr-3);
+  height: 0.35rem;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+  outline: 1px solid var(--clr-10);
+  overflow: hidden;
+  margin-inline: 0.5rem;
+}
+
+.memory-usage-bar {
+  height: 100%;
+  background-color: var(--clr-11);
+  /* width: 0%; */
+  width: 30%;
+  transition: width 350ms ease-out;
+}
 .empty-message {
   text-align: center;
   padding: 2.5rem 0;

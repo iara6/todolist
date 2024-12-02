@@ -1,4 +1,4 @@
-const todoList = JSON.parse(localStorage.getItem('data')) || [
+let todoList = JSON.parse(localStorage.getItem('data')) || [
   { id: 1731559522940,
     name: 'make dinner',
     isChecked: true
@@ -139,6 +139,40 @@ function addOrEdit() {
 };
 
 renderTodoList(); 
+
+/*********************************
+  DELETE ALL/UNCHECK ALL BUTTONS  
+**********************************/
+const deleteAllBtn = document.querySelector('.delete-all-btn');
+const uncheckAllBtn = document.querySelector('.uncheck-all-btn');
+
+deleteAllBtn.addEventListener('click', () => {
+  let message = 'Are you sure?';
+
+  if(confirm(message) === true) {
+    todoList.forEach((item) => {
+      trashBinList.push(item);
+    });
+
+    renderTrashBinList();
+    renderMemoryUsageBar();
+    todoList = [];
+    renderTodoList();
+    moveProgressBar();
+  } else {
+    return;
+  };
+});
+
+uncheckAllBtn.addEventListener('click', () => {
+  todoList.forEach((item) => {
+    item.isChecked = false;
+  });
+
+  renderTodoList();
+  moveProgressBar();
+});
+
 
 /**************************************************
   Add 'checked' when clicking on a list todo item

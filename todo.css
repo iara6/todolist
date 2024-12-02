@@ -114,10 +114,11 @@ input:focus {
 }
 
 .add-button,
-.cancel-button {
+.cancel-button,
+.delete-uncheck-btns-container button {
   background-color: var(--clr-2);
   border: none;
-  padding: 6.2px 1.5rem;
+  padding: 6.1px 1.5rem;
   font-family: "Rubik", sans-serif;
   font-size: 1rem;
   cursor: pointer;
@@ -135,9 +136,18 @@ input:focus {
   margin-left: 3px;
 }
 
+.delete-uncheck-btns-container {
+  margin-top: 0.6rem;
+}
+
+.delete-uncheck-btns-container button {
+  border-radius: 10px;
+}
+
 .add-button:hover,
 .cancel-button:hover,
-.bin-clear-all-btn:hover {
+.bin-clear-all-btn:hover,
+.delete-uncheck-btns-container button:hover {
   background-color: var(--clr-6);
 }
 

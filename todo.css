@@ -36,7 +36,6 @@
   --clr-5: #332332; 
   --clr-6: #d78acd; /* btn hover */
   --clr-7: #3a2a4d; /* icon hover */
-  /* --clr-8: #bca9c8; */ /* bin container */
   --clr-8: #96c1b2; /* bin container */
   --clr-9: #73ae35; /* progress bar */
   --clr-10: #4d4d4d; /* outline */
@@ -224,8 +223,7 @@ input:focus {
 .memory-usage-bar {
   height: 100%;
   background-color: var(--clr-11);
-  /* width: 0%; */
-  width: 30%;
+  width: 0%;
   transition: width 350ms ease-out;
 }
 .empty-message {
@@ -268,7 +266,6 @@ input:focus {
 
 .bin-list span i {
   font-size: 1.1rem;
-  /* color: var(--clr-1); */
   transition: all 250ms ease-in;
 }
 
@@ -329,7 +326,6 @@ input:focus {
 .list-container {
   background-color: var(--clr-3);
   font-family: "Playwrite GB S", cursive;
-  /* border: 2px solid red; */
   max-height: 390px;
   max-width: 100%;
   overflow-y: scroll;

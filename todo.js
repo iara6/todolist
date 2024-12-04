@@ -22,7 +22,12 @@ renderTodoList();
 /************************
     DISPLAY TO-DO LIST
 *************************/
+const audioError = new Audio("./sounds/click-error-1110.wav");
+
+audioError.volume = 0.5; 
+
 function renderTodoList() {
+  console.log('renderTodoList');
   let todoHTML = '';
 
   todoList.forEach((object) => {
@@ -51,12 +56,12 @@ function renderTodoList() {
   document.querySelectorAll('.delete-button')
     .forEach((button, index) => {
       button.addEventListener('click', () => {
-        
-        if (trashBinList.length === 60) {
+        if (trashBinList.length >= 70) {
+          audioError.play();
           alert('Your trash bin is full');
           return;
         };
-
+        
         trashBinList.push(todoList[index]);
         todoList.splice(index, 1);
         renderTrashBinList();
@@ -73,7 +78,12 @@ const cancelBtn = document.querySelector('.cancel-button');
 let btnMode = 'addMode';
 let editIndex = null;
 
-addBtn.addEventListener('click', addOrEdit);
+const audioClick = new Audio("./sounds/typewriter-soft-click-1125.wav");
+
+addBtn.addEventListener('click', () => {
+  audioClick.play();
+  addOrEdit();
+});
 
 /********************
     RESET BUTTONS
@@ -107,6 +117,8 @@ function updateTodo(index) {
    ADD/EDIT MODE
 *******************/
 function addOrEdit() {
+  console.log('addOrEdit');
+
   let input = document.getElementById("input");
   const todoName = input.value;
 
@@ -148,27 +160,38 @@ const uncheckAllBtn = document.querySelector('.uncheck-all-btn');
 
 deleteAllBtn.addEventListener('click', () => {
   let message = 'Are you sure?';
+  audioClick.play();
 
   if(confirm(message) === true) {
-    todoList.forEach((item) => {
-      trashBinList.push(item);
-    });
 
-    renderTrashBinList();
-    renderMemoryUsageBar();
-    todoList = [];
-    renderTodoList();
-    moveProgressBar();
+    if (trashBinList.length >= 70) {
+      audioError.play();
+      alert('Your trash bin is full');
+      return;
+    } else {
+      todoList.forEach((item) => {
+        trashBinList.push(item);
+      });
+  
+      renderTrashBinList();
+      renderMemoryUsageBar();
+      todoList = [];
+      renderTodoList();
+      moveProgressBar();
+    };
+
   } else {
     return;
   };
 });
+console.log(trashBinList);
 
 uncheckAllBtn.addEventListener('click', () => {
   todoList.forEach((item) => {
     item.isChecked = false;
   });
 
+  audioClick.play();
   renderTodoList();
   moveProgressBar();
 });
@@ -180,6 +203,8 @@ uncheckAllBtn.addEventListener('click', () => {
 const list = document.querySelector('.todo-list');
 
 list.addEventListener('click', (e) => {
+  console.log('list.addEventListener');
+
   if (e.target.tagName === 'LI') {
     e.target.classList.toggle('checked');
   };
@@ -200,10 +225,13 @@ list.addEventListener('click', (e) => {
   moveProgressBar();
 });
 
-/*******************
-  DARK MODE BUTTON 
-********************/
+/************************
+  LIGHT/DARK MODE BUTTON 
+*************************/
 const switchBtn = document.querySelector('.switch-btn');
+/* const audio = new Audio("./sounds/mixkit-single-key-press-in-a-laptop-2541.wav"); */
+const audioPop = new Audio("./sounds/long-pop-2358.wav");
+audioPop.volume = 0.5; 
 
 if (darkModeOn) {
   document.documentElement.classList.add('dark-mode');
@@ -211,6 +239,7 @@ if (darkModeOn) {
 }
 
 switchBtn.addEventListener('click', () => {
+  audioPop.play();
   darkModeOn = !darkModeOn;
   document.documentElement.classList.toggle('dark-mode', darkModeOn);
   switchBtn.classList.toggle('slide', darkModeOn);
@@ -232,6 +261,7 @@ const closeBinBtn = document.querySelector('.close-bin-btn');
 const clearAllBtn = document.querySelector('.bin-clear-all-btn');
 
 bin.addEventListener('click', () => {
+  /* audioClick.play(); */
   binContainer.style.display = "block"; 
 });
 closeBinBtn.addEventListener('click', () => {
@@ -239,6 +269,8 @@ closeBinBtn.addEventListener('click', () => {
 });
 
 function renderTrashBinList() {
+  console.log('renderTrashBinList');
+
   let trashBinHTML = '';
 
   trashBinList.forEach((object) => {
@@ -297,24 +329,33 @@ function renderTrashBinList() {
 
 renderTrashBinList(); 
 
+const audioCrumpledPaper = new Audio("./sounds/quick-paper-crumple-sound-2996.wav");
+/* const audio = new Audio("./sounds/mixkit-page-back-chime-1108.wav"); */
+audioCrumpledPaper.volume = 0.3; 
+
 clearAllBtn.addEventListener('click', () => {
   let text = 'Are you sure?';
+
+  audioClick.play();
 
   if(confirm(text) === true) {
     trashBinList = [];
     renderTrashBinList();
     renderMemoryUsageBar();
+    audioCrumpledPaper.play();
   } else {
     return;
   };
 });
 
-/**************************
+/***************************
    TRASH MEMORY USAGE BAR
-***************************/
+****************************/
 function renderMemoryUsageBar() {
+  console.log('renderMemoryUsageBar');
+
   const memoryBar = document.querySelector('.memory-usage-bar');
-  const memoryBarStep = Number((100 / 60).toFixed(2));
+  const memoryBarStep = Number((100 / 70).toFixed(2));
   let memoryBarWidth = null;
 
   memoryBarWidth = memoryBarStep * trashBinList.length;
@@ -325,10 +366,27 @@ renderMemoryUsageBar();
 /*****************
    PROGRESS BAR
 ******************/
+
+
+/* audioPositive.volume = 0.6;  */
+let audioPlayed = false;
+const audioPositive1 = new Audio("./sounds/uplifting-flute-notification-2317.wav");
+const audioPositive2 = new Audio("./sounds/cartoon-positive-sound-2255.wav");
+const audioPositive3 = new Audio("./sounds/kids-cartoon-close-bells-2256.wav");
+const audioPositive4 = new Audio("./sounds/toy-drums-and-bell-ding-560.wav");
+
+const audioPositiveOptions = [audioPositive1, audioPositive2, audioPositive3, audioPositive4];
+
+audioPositiveOptions.forEach((audio) => {
+  audio.volume = 0.6;
+});
+
 function moveProgressBar() {
+  console.log('moveProgressBar');
+
   const progressBar = document.querySelector('.progress-bar');
   const progressBarStep = Number((100 / todoList.length).toFixed(2));
-  let progressBarWidth = null;
+  let progressBarWidth = 0;
 
   todoList.forEach((obj) => {
     const { isChecked } = obj;
@@ -337,16 +395,34 @@ function moveProgressBar() {
     };  
   });
 
- progressBar.style.width = progressBarWidth < 100 ? `${Math.ceil(progressBarWidth)}%` : `${Math.floor(progressBarWidth)}%`;
+  progressBar.style.width = progressBarWidth < 100 ? `${Math.ceil(progressBarWidth)}%` : `100%`;
+  /* `${Math.floor(progressBarWidth)}% */
+
+  const randomAudio = audioPositiveOptions[Math.floor(Math.random() * audioPositiveOptions.length)];
+
+  if (progressBar.style.width === "100%" && !audioPlayed) {
+    randomAudio.play();
+    audioPlayed = true;
+  };
+
+  if (progressBar.style.width !== "100%") {
+    audioPlayed = false;
+  }
+ 
 };
 moveProgressBar();
+
+
 
 /**********************************
   TRIGGER A BUTTON CLICK ON ENTER
 ***********************************/
+const audioKey = new Audio("./sounds/single-key-press-in-a-laptop-2541.wav");
+
 document.getElementById("input")
   .addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
+      audioKey.play();
       addOrEdit();
     }
   });

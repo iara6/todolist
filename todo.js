@@ -348,6 +348,55 @@ clearAllBtn.addEventListener('click', () => {
   };
 });
 
+/*------------------------------
+  DRAGGABLE TRASH BIN CONTAINER 
+--------------------------------*/
+
+let isDraggable = false;
+let offsetX, offsetY;
+
+// checks if the mouse is over the scrollbar
+function isMouseOverScrollbar(e) {
+  const { clientWidth, scrollWidth } = binContainer;
+  console.log(clientWidth);
+  const isOverScrollbar = scrollWidth > clientWidth && e.offsetX > clientWidth;
+  return isOverScrollbar;
+};
+
+console.log('isMouseOverScrollbar');
+isMouseOverScrollbar(); 
+
+binContainer.addEventListener('mousedown', (e) => {
+  if (isMouseOverScrollbar(e)) return; 
+
+  isDraggable = true;
+
+  offsetX = e.clientX - binContainer.offsetLeft;
+  offsetY = e.clientY - binContainer.offsetTop;
+
+  binContainer.style.cursor = 'grabbing';
+});
+
+document.addEventListener('mousemove', (e) => {
+  if (isDraggable) {
+    binContainer.style.left = `${e.clientX - offsetX}px`;
+    binContainer.style.top = `${e.clientY - offsetY}px`;
+  };
+});
+
+document.addEventListener('mouseup', () => {
+  isDraggable = false;
+  binContainer.style.cursor = 'move';
+ /*  if (isDraggable) {
+    isDraggable = false;
+    binContainer.style.cursor = 'move';
+  } */
+});
+
+binContainer.addEventListener('mousemove', (e) => {
+  binContainer.style.cursor = isMouseOverScrollbar(e) ? 'default' : 'move';
+});
+
 /***************************
    TRASH MEMORY USAGE BAR
 ****************************/

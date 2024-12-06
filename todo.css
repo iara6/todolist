@@ -150,13 +150,43 @@ input:focus {
   background-color: var(--clr-6);
 }
 
+/***********************
+   SOUND ON/OFF BUTTON
+************************/
+.sound-btn {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  width: 2.7rem;
+  height: 1.7rem;
+  display: flex;
+  border-radius: 1rem;
+  align-items: center;
+  /* justify-content: center; */
+  padding-left: 0.6rem;
+  border: none;
+  background: var(--clr-3);
+  transition: all 300ms ease-in-out;
+}
+.sound-btn span {
+  display: inline-block;
+  font-size: 1.15rem;
+  cursor: pointer;
+  color: var(--clr-5);
+ }
+
+ .hidden {
+  display: none;
+ }
+ 
 /**************
    TRASH BIN
 ***************/
 .trash-bin-btn {
   position: absolute;
-  top: 1.2rem;
-  left: 1rem;
+ /*  top: 1.2rem; */
+  bottom: 1.5rem;
+  left: 6rem;
   font-size: 1.5rem;
   color: var(--clr-2);
   text-shadow: 0 0 1px var(--clr-font2);
@@ -263,6 +293,7 @@ input:focus {
 
 .restore-button {
   margin-right: 2px;
+  margin-left: 6px;
 }
 
 .bin-list span i {
@@ -414,13 +445,14 @@ li.checked::before {
   }
   .add-button,
   .cancel-button,
-  .bin-clear-all-btn {
+  .bin-clear-all-btn,
+  .delete-uncheck-btns-container button {
     padding: 5.3px 1.4rem;
     font-size: 0.9rem;
   }
   .trash-bin-btn {
-    top: 1rem;
-    left: 1rem;
+    bottom: 1.5rem;
+    left: 4rem;
     font-size: 1.3rem;
   }
   .bin-container {

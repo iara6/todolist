@@ -19,15 +19,27 @@ let darkModeOn = JSON.parse(localStorage.getItem('mode')) || false;
 
 renderTodoList();
 
+/*------------------
+    audio files
+-------------------*/
+const audioError = new Audio("./sounds/click-error-1110.wav");
+const audioClick = new Audio("./sounds/typewriter-soft-click-1125.wav");
+const audioPressClick = new Audio("./sounds/click_button_short_sharp.mp3");
+const audioPop = new Audio("./sounds/long-pop-2358.wav");
+const audioCrumpledPaper = new Audio("./sounds/quick-paper-crumple-sound-2996.wav");
+const audioPositive1 = new Audio("./sounds/uplifting-flute-notification-2317.wav");
+const audioPositive2 = new Audio("./sounds/cartoon-positive-sound-2255.wav");
+const audioPositive3 = new Audio("./sounds/kids-cartoon-close-bells-2256.wav");
+const audioPositive4 = new Audio("./sounds/toy-drums-and-bell-ding-560.wav");
+const audioKey = new Audio("./sounds/single-key-press-in-a-laptop-2541.wav");
+
 /************************
     DISPLAY TO-DO LIST
 *************************/
-const audioError = new Audio("./sounds/click-error-1110.wav");
 
 audioError.volume = 0.5; 
 
 function renderTodoList() {
-  console.log('renderTodoList');
   let todoHTML = '';
 
   todoList.forEach((object) => {
@@ -78,8 +90,6 @@ const cancelBtn = document.querySelector('.cancel-button');
 let btnMode = 'addMode';
 let editIndex = null;
 
-const audioClick = new Audio("./sounds/typewriter-soft-click-1125.wav");
-
 addBtn.addEventListener('click', () => {
   audioClick.play();
   addOrEdit();
@@ -117,8 +127,6 @@ function updateTodo(index) {
    ADD/EDIT MODE
 *******************/
 function addOrEdit() {
-  console.log('addOrEdit');
-
   let input = document.getElementById("input");
   const todoName = input.value;
 
@@ -163,28 +171,36 @@ deleteAllBtn.addEventListener('click', () => {
   audioClick.play();
 
   if(confirm(message) === true) {
+    const availableSlots = 70 - trashBinList.length;
 
-    if (trashBinList.length >= 70) {
+    if (availableSlots <= 0) {
       audioError.play();
       alert('Your trash bin is full');
       return;
+    }
+    
+    if (todoList.length > availableSlots) {
+      const itemsToAdd = todoList.slice(0, availableSlots);
+      trashBinList.push(...itemsToAdd);
+      todoList = todoList.slice(availableSlots);
+
+      audioError.play();
+      alert('Your trash bin is full. Not all items could be moved.');
+
     } else {
-      todoList.forEach((item) => {
-        trashBinList.push(item);
-      });
+      trashBinList.push(...todoList);
+      todoList = [];
+    };
   
       renderTrashBinList();
       renderMemoryUsageBar();
-      todoList = [];
       renderTodoList();
       moveProgressBar();
-    };
-
+    
   } else {
     return;
   };
 });
-console.log(trashBinList);
 
 uncheckAllBtn.addEventListener('click', () => {
   todoList.forEach((item) => {
@@ -202,11 +218,12 @@ uncheckAllBtn.addEventListener('click', () => {
 ***************************************************/
 const list = document.querySelector('.todo-list');
 
-list.addEventListener('click', (e) => {
-  console.log('list.addEventListener');
+audioPressClick.volume = 0.08;
 
+list.addEventListener('click', (e) => {
   if (e.target.tagName === 'LI') {
     e.target.classList.toggle('checked');
+    audioPressClick.play();
   };
  
   const todoId = e.target.dataset.id;
@@ -225,12 +242,34 @@ list.addEventListener('click', (e) => {
   moveProgressBar();
 });
 
+/**********************
+  SOUND ON/OFF BUTTON 
+***********************/
+const soundBtn = document.querySelector('.sound-btn');
+const soundOnIcon = document.querySelector('.fa-volume-high');
+const soundOffIcon = document.querySelector('.fa-volume-off');
+const audioFiles = [audioError, audioClick, audioPressClick, audioPop, audioCrumpledPaper, audioPositive1, audioPositive2, audioPositive3, audioPositive4, audioKey];
+
+soundBtn.addEventListener('click', () => {
+  soundOnIcon.classList.toggle('hidden');
+  soundOffIcon.classList.toggle('hidden');
+
+  if (soundOnIcon.classList.contains('hidden')) {
+    audioFiles.forEach(audio => {
+      audio.muted = true;
+    });
+  } else {
+    audioFiles.forEach(audio => {
+      audio.muted = false;
+      audioClick.play();
+    });
+  };
+});
+
 /************************
   LIGHT/DARK MODE BUTTON 
 *************************/
 const switchBtn = document.querySelector('.switch-btn');
-/* const audio = new Audio("./sounds/mixkit-single-key-press-in-a-laptop-2541.wav"); */
-const audioPop = new Audio("./sounds/long-pop-2358.wav");
 audioPop.volume = 0.5; 
 
 if (darkModeOn) {
@@ -269,8 +308,6 @@ closeBinBtn.addEventListener('click', () => {
 });
 
 function renderTrashBinList() {
-  console.log('renderTrashBinList');
-
   let trashBinHTML = '';
 
   trashBinList.forEach((object) => {
@@ -329,8 +366,6 @@ function renderTrashBinList() {
 
 renderTrashBinList(); 
 
-const audioCrumpledPaper = new Audio("./sounds/quick-paper-crumple-sound-2996.wav");
-/* const audio = new Audio("./sounds/mixkit-page-back-chime-1108.wav"); */
 audioCrumpledPaper.volume = 0.3; 
 
 clearAllBtn.addEventListener('click', () => {
@@ -351,20 +386,23 @@ clearAllBtn.addEventListener('click', () => {
 /*------------------------------
   DRAGGABLE TRASH BIN CONTAINER 
 --------------------------------*/
-
 let isDraggable = false;
 let offsetX, offsetY;
 
 // checks if the mouse is over the scrollbar
 function isMouseOverScrollbar(e) {
-  const { clientWidth, scrollWidth } = binContainer;
-  console.log(clientWidth);
-  const isOverScrollbar = scrollWidth > clientWidth && e.offsetX > clientWidth;
+  const { clientWidth, clientHeight, scrollHeight } = binContainer;
+  console.log(clientWidth); // 422
+  console.log(clientHeight); // 500
+  console.log(scrollHeight); // 2061
+  const isOverScrollbar = scrollHeight > clientHeight && e.offsetX >= clientWidth;
+  console.log(isOverScrollbar); //false
+  // when hovering over scrollbar - true
   return isOverScrollbar;
 };
 
-console.log('isMouseOverScrollbar');
-isMouseOverScrollbar(); 
+/* console.log('isMouseOverScrollbar');
+isMouseOverScrollbar();  */
 
 binContainer.addEventListener('mousedown', (e) => {
   if (isMouseOverScrollbar(e)) return; 
@@ -387,10 +425,6 @@ document.addEventListener('mousemove', (e) => {
 document.addEventListener('mouseup', () => {
   isDraggable = false;
   binContainer.style.cursor = 'move';
- /*  if (isDraggable) {
-    isDraggable = false;
-    binContainer.style.cursor = 'move';
-  } */
 });
 
 binContainer.addEventListener('mousemove', (e) => {
@@ -401,8 +435,6 @@ binContainer.addEventListener('mousemove', (e) => {
    TRASH MEMORY USAGE BAR
 ****************************/
 function renderMemoryUsageBar() {
-  console.log('renderMemoryUsageBar');
-
   const memoryBar = document.querySelector('.memory-usage-bar');
   const memoryBarStep = Number((100 / 70).toFixed(2));
   let memoryBarWidth = null;
@@ -416,13 +448,7 @@ renderMemoryUsageBar();
    PROGRESS BAR
 ******************/
 
-
-/* audioPositive.volume = 0.6;  */
 let audioPlayed = false;
-const audioPositive1 = new Audio("./sounds/uplifting-flute-notification-2317.wav");
-const audioPositive2 = new Audio("./sounds/cartoon-positive-sound-2255.wav");
-const audioPositive3 = new Audio("./sounds/kids-cartoon-close-bells-2256.wav");
-const audioPositive4 = new Audio("./sounds/toy-drums-and-bell-ding-560.wav");
 
 const audioPositiveOptions = [audioPositive1, audioPositive2, audioPositive3, audioPositive4];
 
@@ -431,10 +457,10 @@ audioPositiveOptions.forEach((audio) => {
 });
 
 function moveProgressBar() {
-  console.log('moveProgressBar');
-
   const progressBar = document.querySelector('.progress-bar');
   const progressBarStep = Number((100 / todoList.length).toFixed(2));
+  const progressBarContainer = document.querySelector('.progress-bar-container');
+
   let progressBarWidth = 0;
 
   todoList.forEach((obj) => {
@@ -452,21 +478,20 @@ function moveProgressBar() {
   if (progressBar.style.width === "100%" && !audioPlayed) {
     randomAudio.play();
     audioPlayed = true;
+    progressBarContainer.style.boxShadow = "0 0 5px 1px var(--clr-9)";
   };
 
   if (progressBar.style.width !== "100%") {
     audioPlayed = false;
+    progressBarContainer.style.boxShadow = "none";
   }
  
 };
 moveProgressBar();
 
-
-
 /**********************************
   TRIGGER A BUTTON CLICK ON ENTER
 ***********************************/
-const audioKey = new Audio("./sounds/single-key-press-in-a-laptop-2541.wav");
 
 document.getElementById("input")
   .addEventListener('keypress', (e) => {

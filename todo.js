@@ -36,8 +36,8 @@ const audioKey = new Audio("./sounds/single-key-press-in-a-laptop-2541.wav");
 /************************
     DISPLAY TO-DO LIST
 *************************/
-
 audioError.volume = 0.5; 
+const maxTrashBinSlots = 100; 
 
 function renderTodoList() {
   let todoHTML = '';
@@ -68,7 +68,7 @@ function renderTodoList() {
   document.querySelectorAll('.delete-button')
     .forEach((button, index) => {
       button.addEventListener('click', () => {
-        if (trashBinList.length >= 70) {
+        if (trashBinList.length >= maxTrashBinSlots) {
           audioError.play();
           alert('Your trash bin is full');
           return;
@@ -78,6 +78,7 @@ function renderTodoList() {
         todoList.splice(index, 1);
         renderTrashBinList();
         renderTodoList();
+        moveProgressBar();
         renderMemoryUsageBar();
       });
     });
@@ -107,6 +108,7 @@ function resetBtns() {
 };
 
 cancelBtn.addEventListener('click', () => {
+  audioClick.play();
   resetBtns();
   renderTodoList();
 });
@@ -126,26 +128,30 @@ function updateTodo(index) {
 /******************
    ADD/EDIT MODE
 *******************/
+function checkInput(value) {
+  if (value.trim() === '') {
+    alert('Enter your text first, bruh');
+    return false;
+  }
+  return true;
+}
+
 function addOrEdit() {
   let input = document.getElementById("input");
   const todoName = input.value;
 
   if (btnMode === 'editMode') {
 
-    if (todoName === '') {
-      alert('Enter your text first, bruh');
-      return;
-    }
+    if (!checkInput(todoName)) return;
+
     todoList[editIndex].name = todoName;
     resetBtns();
     renderTodoList();
 
   } else {
   
-    if (todoName === '') {
-      alert('Enter your text first, bruh');
-      return;
-    }
+    if (!checkInput(todoName)) return;
+    
     todoList.push({
       id: Date.now(),
       name: todoName, 
@@ -167,39 +173,41 @@ const deleteAllBtn = document.querySelector('.delete-all-btn');
 const uncheckAllBtn = document.querySelector('.uncheck-all-btn');
 
 deleteAllBtn.addEventListener('click', () => {
-  let message = 'Are you sure?';
   audioClick.play();
 
-  if(confirm(message) === true) {
-    const availableSlots = 70 - trashBinList.length;
-
-    if (availableSlots <= 0) {
-      audioError.play();
-      alert('Your trash bin is full');
-      return;
-    }
-    
-    if (todoList.length > availableSlots) {
-      const itemsToAdd = todoList.slice(0, availableSlots);
-      trashBinList.push(...itemsToAdd);
-      todoList = todoList.slice(availableSlots);
-
-      audioError.play();
-      alert('Your trash bin is full. Not all items could be moved.');
-
-    } else {
-      trashBinList.push(...todoList);
-      todoList = [];
-    };
-  
-      renderTrashBinList();
-      renderMemoryUsageBar();
-      renderTodoList();
-      moveProgressBar();
-    
-  } else {
+  if (todoList.length === 0) {
+    alert('There are no items to delete.');
     return;
   };
+
+  let message = 'Are you sure?';
+  if(!confirm(message)) return;
+  
+  const availableSlots = maxTrashBinSlots - trashBinList.length;
+
+  if (availableSlots <= 0) {
+    audioError.play();
+    alert('Your trash bin is full');
+    return;
+  }
+    
+  if (todoList.length > availableSlots) {
+    const itemsToAdd = todoList.slice(0, availableSlots);
+    trashBinList.push(...itemsToAdd);
+    todoList = todoList.slice(availableSlots);
+
+    audioError.play();
+    alert('Your trash bin is full. Not all items could be moved.');
+
+  } else {
+    trashBinList.push(...todoList);
+    todoList = [];
+  };
+  
+    renderTrashBinList();
+    renderMemoryUsageBar();
+    renderTodoList();
+    moveProgressBar();
 });
 
 uncheckAllBtn.addEventListener('click', () => {
@@ -221,21 +229,22 @@ const list = document.querySelector('.todo-list');
 audioPressClick.volume = 0.08;
 
 list.addEventListener('click', (e) => {
-  if (e.target.tagName === 'LI') {
-    e.target.classList.toggle('checked');
-    audioPressClick.play();
-  };
+  if (e.target.tagName !== 'LI') return;
+
+  e.target.classList.toggle('checked');
+  audioPressClick.play();
  
-  const todoId = e.target.dataset.id;
+  const todoId = Number(e.target.dataset.id);
   // const todoId = e.target.getAttribute('data-id');
-  const match = todoList.find(todo => todo.id === Number(todoId));
+  const match = todoList.find(todo => todo.id === todoId);
   
-  if(match !== undefined) {
-    if (e.target.classList.contains('checked')) {
+  if(match) {
+    match.isChecked = e.target.classList.contains('checked');
+   /*  if (e.target.classList.contains('checked')) {
       match.isChecked = true;
     } else {
       match.isChecked = false;
-    }
+    } */
   }; 
 
   renderTodoList();
@@ -250,20 +259,21 @@ const soundOnIcon = document.querySelector('.fa-volume-high');
 const soundOffIcon = document.querySelector('.fa-volume-off');
 const audioFiles = [audioError, audioClick, audioPressClick, audioPop, audioCrumpledPaper, audioPositive1, audioPositive2, audioPositive3, audioPositive4, audioKey];
 
-soundBtn.addEventListener('click', () => {
-  soundOnIcon.classList.toggle('hidden');
-  soundOffIcon.classList.toggle('hidden');
+let isSoundOn = true;
 
-  if (soundOnIcon.classList.contains('hidden')) {
-    audioFiles.forEach(audio => {
-      audio.muted = true;
-    });
-  } else {
-    audioFiles.forEach(audio => {
-      audio.muted = false;
-      audioClick.play();
-    });
-  };
+soundBtn.addEventListener('click', () => {
+  isSoundOn = !isSoundOn;
+
+  soundOnIcon.classList.toggle('hidden', !isSoundOn);
+  soundOffIcon.classList.toggle('hidden', isSoundOn);
+
+  audioFiles.forEach(audio => {
+    audio.muted = !isSoundOn;
+  });
+
+  if (isSoundOn) {
+    audioClick.play();
+  }
 });
 
 /************************
@@ -284,7 +294,6 @@ switchBtn.addEventListener('click', () => {
   switchBtn.classList.toggle('slide', darkModeOn);
 
   localStorage.setItem('mode', JSON.stringify(darkModeOn));
-
 });
 
 // toggle('class', condition)
@@ -298,36 +307,56 @@ const bin = document.querySelector('.trash-bin-btn');
 const binContainer = document.querySelector('.bin-container');
 const closeBinBtn = document.querySelector('.close-bin-btn');
 const clearAllBtn = document.querySelector('.bin-clear-all-btn');
+const binList = document.querySelector('.bin-list');
+const memoryBarContainer = document.querySelector('.memory-usage-bar-container');
+
+function elementVisibility(element, show) {
+  element.style.display = show ? "block" : "none";
+}
 
 bin.addEventListener('click', () => {
-  /* audioClick.play(); */
-  binContainer.style.display = "block"; 
+  audioClick.play();
+  elementVisibility(binContainer, true);
 });
+
 closeBinBtn.addEventListener('click', () => {
-  binContainer.style.display = "none"; 
+  elementVisibility(binContainer, false);
 });
 
 function renderTrashBinList() {
   let trashBinHTML = '';
 
-  trashBinList.forEach((object) => {
-    const { name } = object;
-    const HTML = `
-      <li class="bin-list-name">${name}
-        <div class="bin-btn-container">
-          <span class="restore-button" title="Restore"><i class="fa-solid fa-trash-arrow-up"></i></span>
-          <span class="delete-trash-button" title="Delete"><i class="fa-regular fa-circle-xmark"></i></span>
-        </div>
-      </li>
-    `; 
+  if (trashBinList.length === 0) {
+    binList.innerHTML = `<div class="empty-message">It's empty</div>`;
+    elementVisibility(clearAllBtn, false);
+    elementVisibility(memoryBarContainer, false);
+  } else {
+    trashBinList.forEach((object) => {
+      const { name } = object;
+      const HTML = `
+        <li class="bin-list-name">${name}
+          <div class="bin-btn-container">
+            <span class="restore-button" title="Restore"><i class="fa-solid fa-trash-arrow-up"></i></span>
+            <span class="delete-trash-button" title="Delete"><i class="fa-regular fa-circle-xmark"></i></span>
+          </div>
+        </li>
+      `; 
+  
+      trashBinHTML += HTML;
+    });
+  
+    binList.innerHTML = trashBinHTML;
 
-    trashBinHTML += HTML;
-  });
+    elementVisibility(clearAllBtn, true);
+    elementVisibility(memoryBarContainer, true);
+  }
+  
+  addTrashBinListeners();
+  localStorage.setItem('trash', JSON.stringify(trashBinList));
+};
 
-  document.querySelector('.bin-list')
-    .innerHTML = trashBinHTML;
-
-  document.querySelectorAll('.restore-button')
+function addTrashBinListeners() {
+  binList.querySelectorAll('.restore-button')
     .forEach((button, index) => {
       button.addEventListener('click', () => {
         trashBinList[index].isChecked = false;
@@ -338,9 +367,9 @@ function renderTrashBinList() {
         moveProgressBar();
         renderMemoryUsageBar();
       });
-    });
+  });
 
-  document.querySelectorAll('.delete-trash-button')
+  binList.querySelectorAll('.delete-trash-button')
     .forEach((button, index) => {
       button.addEventListener('click', () => {
         trashBinList.splice(index, 1);
@@ -348,40 +377,22 @@ function renderTrashBinList() {
         renderMemoryUsageBar();
     });
   });
-
-  const memoryBarContainer = document.querySelector('.memory-usage-bar-container');
-
-  if (trashBinList.length === 0) {
-    clearAllBtn.style.display = "none";
-    memoryBarContainer.style.display = "none";
-    document.querySelector('.bin-list')
-    .innerHTML = `<div class="empty-message">It's empty</div>`;
-  } else {
-    clearAllBtn.style.display = "block";
-    memoryBarContainer.style.display = "block";
-  };
-
-  localStorage.setItem('trash', JSON.stringify(trashBinList));
-};
-
-renderTrashBinList(); 
-
-audioCrumpledPaper.volume = 0.3; 
+}
 
 clearAllBtn.addEventListener('click', () => {
   let text = 'Are you sure?';
-
   audioClick.play();
-
-  if(confirm(text) === true) {
-    trashBinList = [];
-    renderTrashBinList();
-    renderMemoryUsageBar();
-    audioCrumpledPaper.play();
-  } else {
-    return;
-  };
+  
+  if(!confirm(text)) return;
+  
+  trashBinList = [];
+  renderTrashBinList();
+  renderMemoryUsageBar();
+  audioCrumpledPaper.play();
 });
+
+renderTrashBinList(); 
+audioCrumpledPaper.volume = 0.3; 
 
 /*------------------------------
   DRAGGABLE TRASH BIN CONTAINER 
@@ -436,11 +447,12 @@ binContainer.addEventListener('mousemove', (e) => {
 ****************************/
 function renderMemoryUsageBar() {
   const memoryBar = document.querySelector('.memory-usage-bar');
-  const memoryBarStep = Number((100 / 70).toFixed(2));
+  const memoryBarStep = Number((100 / maxTrashBinSlots).toFixed(2));
   let memoryBarWidth = null;
 
   memoryBarWidth = memoryBarStep * trashBinList.length;
   memoryBar.style.width = memoryBarWidth < 100 ? `${Math.ceil(memoryBarWidth)}%` : `${Math.floor(memoryBarWidth)}%`;
+  console.log('renderMemoryUsageBar');
 }
 renderMemoryUsageBar();
 
